@@ -435,8 +435,15 @@ func TestStateMv_differentResourceTypes(t *testing.T) {
 		t.Fatalf("expected error output, got:\n%s", ui.OutputWriter.String())
 	}
 
-	if !strings.Contains(ui.ErrorWriter.String(), "resource types don't match") {
-		t.Fatalf("expected initialization error, got:\n%s", ui.ErrorWriter.String())
+	gotErr := strings.TrimSpace(ui.ErrorWriter.String())
+	wantErr := strings.TrimSpace(`.
+| Error: Invalid state move request
+|
+| Cannot move test_instance.foo to test_network.bar: resource types don't
+| match.
+'`)
+	if gotErr != wantErr {
+		t.Fatalf("expected initialization error\ngot:\n%s\n\nwant:%s", gotErr, wantErr)
 	}
 }
 
